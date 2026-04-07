@@ -12,6 +12,7 @@ target_include_directories(bloodspilot-replay
 
 target_compile_definitions(bloodspilot-replay
     PRIVATE
+        HAVE_CONFIG_H=1
         REPLAY=1
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
         VERSION="${PROJECT_VERSION}"

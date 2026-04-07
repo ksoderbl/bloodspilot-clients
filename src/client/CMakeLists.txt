@@ -25,6 +25,8 @@ target_compile_definitions(bloodspilot_client_common
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
 )
 
+target_link_libraries(bloodspilot_client_common PUBLIC m)
+
 if(ZLIB_FOUND)
     target_link_libraries(bloodspilot_client_common PUBLIC ZLIB::ZLIB)
 endif()

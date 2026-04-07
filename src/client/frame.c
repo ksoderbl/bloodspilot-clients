@@ -1,7 +1,7 @@
 /*
  * BloodsPilot, a multiplayer space war game.  Copyright (C) 1991-2001 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -78,14 +78,14 @@ int num_wormholes, max_wormholes;
 
 long start_loops, end_loops;
 
-int eyesId;			/* Player we get frame updates for */
-other_t *eyes;			/* Player we get frame updates for */
-bool snooping;			/* are we snooping on someone else? */
-int eyeTeam;			/* Team of player we get updates for */
+int eyesId;					/* Player we get frame updates for */
+other_t *eyes = NULL;		/* Player we get frame updates for */
+bool snooping;				/* are we snooping on someone else? */
+int eyeTeam = TEAM_NOT_SET; /* Team of player we get updates for */
 int scoresChanged;
 
-short damaged;			/* Damaged by ECM */
-short destruct;			/* If self destructing */
+short damaged;	/* Damaged by ECM */
+short destruct; /* If self destructing */
 short shutdown_delay;
 short shutdown_count;
 short thrusttime;
@@ -98,35 +98,35 @@ short phasingtimemax;
 ipos_t selfPos;
 ipos_t selfVel;
 short heading;
-double displayedPower;		/* What the server is sending us */
-double displayedTurnspeed;	/* What the server is sending us */
-double displayedTurnresistance;	/* What the server is sending us */
-short lock_id;			/* Id of player locked onto */
-short lock_dir;			/* Direction of lock */
-short lock_dist;		/* Distance to player locked onto */
+double displayedPower;			/* What the server is sending us */
+double displayedTurnspeed;		/* What the server is sending us */
+double displayedTurnresistance; /* What the server is sending us */
+short lock_id;					/* Id of player locked onto */
+short lock_dir;					/* Direction of lock */
+short lock_dist;				/* Distance to player locked onto */
 short nextCheckPoint;
 short autopilotLight;
 uint8_t numItems[NUM_ITEMS];
 uint8_t lastNumItems[NUM_ITEMS];
-short currentTank;		/* Number of currently used tank */
-int fuelSum;			/* Sum of fuel in all tanks */
-int fuelMax;			/* How much fuel can you take? */
-double fuelTime;		/* Display fuel for how long? */
-short selfVisible;		/* Are we alive and playing? */
-int packet_size;		/* Current frame update packet size */
+short currentTank; /* Number of currently used tank */
+int fuelSum;	   /* Sum of fuel in all tanks */
+int fuelMax;	   /* How much fuel can you take? */
+double fuelTime;   /* Display fuel for how long? */
+short selfVisible; /* Are we alive and playing? */
+int packet_size;   /* Current frame update packet size */
 ipos_t world;
 ipos_t realWorld;
 
-char modifiers[MAX_CHARS];	/* Current weapon modifiers */
+char modifiers[MAX_CHARS]; /* Current weapon modifiers */
 int roundDelay;
 int roundDelayMax;
 
-time_t currentTime = 0;		/* Current value of time() */
-bool newSecond = false;		/* Second changed this frame */
-double clientFPS;		/* FPS client is drawing at */
-double timePerFrame = 0.0;	/* Time a frame is shown, unit s */
+time_t currentTime = 0;	   /* Current value of time() */
+bool newSecond = false;	   /* Second changed this frame */
+double clientFPS;		   /* FPS client is drawing at */
+double timePerFrame = 0.0; /* Time a frame is shown, unit s */
 bool played_this_round;
-unsigned twelveHz;		/* Attempt to increment this at 12Hz */
+unsigned twelveHz; /* Attempt to increment this at 12Hz */
 
 void Client_set_eyes_id(int id)
 {
@@ -159,7 +159,8 @@ int Handle_start(long server_loops)
 	num_vfuel = 0;
 	num_vbase = 0;
 	num_vdecor = 0;
-	for (i = 0; i < DEBRIS_TYPES; i++) {
+	for (i = 0; i < DEBRIS_TYPES; i++)
+	{
 		num_debris[i] = 0;
 	}
 
@@ -176,22 +177,23 @@ int Handle_start(long server_loops)
 static void update_timing(void)
 {
 	static int frame_counter = 0;
-	static struct timeval old_tv = { 0, 0 };
+	static struct timeval old_tv = {0, 0};
 	struct timeval now;
 
 	frame_counter++;
 	gettimeofday(&now, NULL);
-	if (now.tv_sec != old_tv.tv_sec) {
+	if (now.tv_sec != old_tv.tv_sec)
+	{
 		double usecs, fps;
 
-		currentTime = time(NULL);	/* ng */
+		currentTime = time(NULL); /* ng */
 		usecs = 1e6 + (now.tv_usec - old_tv.tv_usec);
 		fps = (1e6 * frame_counter) / usecs;
 		old_tv = now;
 		newSecond = true;
 		clientFPS = MAX(1.0, fps);
 		timePerFrame = 1.0 / clientFPS;
-		recordFPS = (int) (clientFPS + 0.5);
+		recordFPS = (int)(clientFPS + 0.5);
 		frame_counter = 0;
 		if (!played_this_round && self && !strchr("PW", self->mychar))
 			played_this_round = true;
@@ -199,7 +201,7 @@ static void update_timing(void)
 	else
 		newSecond = false;
 
-	twelveHz = (unsigned) ((12.0 * end_loops) / (double)FPS);
+	twelveHz = (unsigned)((12.0 * end_loops) / (double)FPS);
 }
 
 int Handle_end(long server_loops)
@@ -213,7 +215,7 @@ int Handle_end(long server_loops)
 	return 0;
 }
 
-int Handle_self_items(uint8_t * newNumItems)
+int Handle_self_items(uint8_t *newNumItems)
 {
 	memcpy(numItems, newNumItems, NUM_ITEMS * sizeof(uint8_t));
 	return 0;
@@ -224,12 +226,12 @@ static void update_status(int status)
 {
 	static int old_status = 0;
 
-	if (BIT(old_status, OLD_GAME_OVER) && !BIT(status, OLD_GAME_OVER)
-	    && !BIT(status, OLD_PAUSE))
+	if (BIT(old_status, OLD_GAME_OVER) && !BIT(status, OLD_GAME_OVER) && !BIT(status, OLD_PAUSE))
 		Raise_window();
 
 	/* Player appeared? */
-	if (BIT(old_status, OLD_PLAYING | OLD_PAUSE | OLD_GAME_OVER) != OLD_PLAYING) {
+	if (BIT(old_status, OLD_PLAYING | OLD_PAUSE | OLD_GAME_OVER) != OLD_PLAYING)
+	{
 		if (BIT(status, OLD_PLAYING | OLD_PAUSE | OLD_GAME_OVER) == OLD_PLAYING)
 			Reset_shields();
 	}
@@ -238,11 +240,11 @@ static void update_status(int status)
 }
 
 int Handle_self(int x, int y, int vx, int vy, int newHeading,
-		float newPower, float newTurnspeed, float newTurnresistance,
-		int newLockId, int newLockDist, int newLockBearing,
-		int newNextCheckPoint, int newAutopilotLight,
-		uint8_t * newNumItems, int newCurrentTank,
-		int newFuelSum, int newFuelMax, int newPacketSize, int status /* kps - ng - ??? */ )
+				float newPower, float newTurnspeed, float newTurnresistance,
+				int newLockId, int newLockDist, int newLockBearing,
+				int newNextCheckPoint, int newAutopilotLight,
+				uint8_t *newNumItems, int newCurrentTank,
+				int newFuelSum, int newFuelMax, int newPacketSize, int status /* kps - ng - ??? */)
 {
 	selfPos.x = x;
 	selfPos.y = y;
@@ -264,28 +266,35 @@ int Handle_self(int x, int y, int vx, int vy, int newHeading,
 	fuelSum = newFuelSum;
 	fuelMax = newFuelMax;
 	selfVisible = 0;
-	if (newPacketSize + 16 < packet_size) {
+	if (newPacketSize + 16 < packet_size)
+	{
 		packet_size -= 16;
 	}
-	else {
+	else
+	{
 		packet_size = newPacketSize;
 	}
-	update_status(status);	/* kps - ng - ??? */
+	update_status(status); /* kps - ng - ??? */
 
 	world.x = selfPos.x - (ext_view_width / 2);
 	world.y = selfPos.y - (ext_view_height / 2);
 	realWorld = world;
-	if (BIT(Setup->mode, WRAP_PLAY)) {
-		if (world.x < 0 && world.x + ext_view_width < Setup->width) {
+	if (BIT(Setup->mode, WRAP_PLAY))
+	{
+		if (world.x < 0 && world.x + ext_view_width < Setup->width)
+		{
 			world.x += Setup->width;
 		}
-		else if (world.x > 0 && world.x + ext_view_width >= Setup->width) {
+		else if (world.x > 0 && world.x + ext_view_width >= Setup->width)
+		{
 			realWorld.x -= Setup->width;
 		}
-		if (world.y < 0 && world.y + ext_view_height < Setup->height) {
+		if (world.y < 0 && world.y + ext_view_height < Setup->height)
+		{
 			world.y += Setup->height;
 		}
-		else if (world.y > 0 && world.y + ext_view_height >= Setup->height) {
+		else if (world.y > 0 && world.y + ext_view_height >= Setup->height)
+		{
 			realWorld.y -= Setup->height;
 		}
 	}
@@ -315,7 +324,6 @@ int Handle_destruct(int count)
 	destruct = count;
 	return 0;
 }
-
 
 int Handle_shutdown(int count, int delay)
 {
@@ -423,7 +431,8 @@ static int predict_self_dir(int received_dir)
 	if (ind < 0)
 		ind = MAX_POINTER_MOVES - 1;
 
-	while (pointer_moves[ind].id > last_keyboard_ack && count < 50) {
+	while (pointer_moves[ind].id > last_keyboard_ack && count < 50)
+	{
 		pointer_delta += pointer_moves[ind].movement * pointer_moves[ind].turnspeed;
 		ind--;
 		if (ind < 0)
@@ -437,7 +446,7 @@ static int predict_self_dir(int received_dir)
 		new_dir += RES;
 	while (new_dir >= RES)
 		new_dir -= RES;
-	int_new_dir = (int) (new_dir + 0.5);
+	int_new_dir = (int)(new_dir + 0.5);
 	while (int_new_dir >= RES)
 		/* might be == RES */
 		int_new_dir -= RES;
@@ -446,14 +455,15 @@ static int predict_self_dir(int received_dir)
 }
 
 int Handle_ship(int x, int y, int id, float angle, int shield, int cloak, int eshield, int phased,
-		int deflector)
+				int deflector)
 {
 	ship_t t;
 
 	t.x = x;
 	t.y = y;
 	t.id = id;
-	if (dirPrediction && self && self->id == id) {
+	if (dirPrediction && self && self->id == id)
+	{
 		int dir = angle_to_int_dir(angle);
 		dir = predict_self_dir(dir);
 		t.angle = dir_to_angle(dir);
@@ -473,7 +483,8 @@ int Handle_ship(int x, int y, int id, float angle, int shield, int cloak, int es
 	 * BG: XXX there was a bug here.  self was dereferenced at "self->id"
 	 * while self could be NULL here.
 	 */
-	if (!selfVisible && ((x == selfPos.x && y == selfPos.y) || (self && id == self->id))) {
+	if (!selfVisible && ((x == selfPos.x && y == selfPos.y) || (self && id == self->id)))
+	{
 		Client_set_eyes_id(id);
 		selfVisible = (self && (id == self->id));
 		return Handle_radar(x, y, 3);
@@ -505,45 +516,50 @@ int Handle_item(int x, int y, int type)
 	return 0;
 }
 
-#define STORE_DEBRIS(typ_e, _p, _n) \
-    if (_n > max_) {						\
-	if (max_ == 0) {						\
-	    ptr_ = (debris_t *)malloc(n * sizeof(*ptr_));		\
-	} else {						\
-	    ptr_ = (debris_t *)realloc(ptr_, _n * sizeof(*ptr_));	\
-	}							\
-	if (ptr_ == NULL) {					\
-	    error("No memory for debris");			\
-	    num_ = max_ = 0;					\
-	    return -1;						\
-	}							\
-	max_ = _n;						\
-    }								\
-    else if (_n <= 0) {						\
-	printf("debris %d < 0\n", _n);				\
-	return 0;						\
-    }								\
-    num_ = _n;							\
-    memcpy(ptr_, _p, _n * sizeof(*ptr_));				\
-    return 0;
+#define STORE_DEBRIS(typ_e, _p, _n)                               \
+	if (_n > max_)                                                \
+	{                                                             \
+		if (max_ == 0)                                            \
+		{                                                         \
+			ptr_ = (debris_t *)malloc(n * sizeof(*ptr_));         \
+		}                                                         \
+		else                                                      \
+		{                                                         \
+			ptr_ = (debris_t *)realloc(ptr_, _n * sizeof(*ptr_)); \
+		}                                                         \
+		if (ptr_ == NULL)                                         \
+		{                                                         \
+			error("No memory for debris");                        \
+			num_ = max_ = 0;                                      \
+			return -1;                                            \
+		}                                                         \
+		max_ = _n;                                                \
+	}                                                             \
+	else if (_n <= 0)                                             \
+	{                                                             \
+		printf("debris %d < 0\n", _n);                            \
+		return 0;                                                 \
+	}                                                             \
+	num_ = _n;                                                    \
+	memcpy(ptr_, _p, _n * sizeof(*ptr_));                         \
+	return 0;
 
-
-int Handle_fastshot(int type, uint8_t * p, int n)
+int Handle_fastshot(int type, uint8_t *p, int n)
 {
-#define num_		(num_fastshot[type])
-#define max_		(max_fastshot[type])
-#define ptr_		(fastshot_ptr[type])
+#define num_ (num_fastshot[type])
+#define max_ (max_fastshot[type])
+#define ptr_ (fastshot_ptr[type])
 	STORE_DEBRIS(type, p, n);
 #undef num_
 #undef max_
 #undef ptr_
 }
 
-int Handle_debris(int type, uint8_t * p, int n)
+int Handle_debris(int type, uint8_t *p, int n)
 {
-#define num_		(num_debris[type])
-#define max_		(max_debris[type])
-#define ptr_		(debris_ptr[type])
+#define num_ (num_debris[type])
+#define max_ (max_debris[type])
+#define ptr_ (debris_ptr[type])
 	STORE_DEBRIS(type, p, n);
 #undef num_
 #undef max_
@@ -627,7 +643,8 @@ int Handle_fastradar(int x, int y, int size)
 	t.y = y;
 	t.type = RadarEnemy;
 
-	if ((size & 0x80) != 0) {
+	if ((size & 0x80) != 0)
+	{
 		t.type = RadarFriend;
 		size &= ~0x80;
 	}
@@ -639,9 +656,8 @@ int Handle_fastradar(int x, int y, int size)
 
 int Handle_radar(int x, int y, int size)
 {
-	return Handle_fastradar
-	    ((int) ((double) (x * RadarWidth) / Setup->width + 0.5),
-	     (int) ((double) (y * RadarHeight) / Setup->height + 0.5), size);
+	return Handle_fastradar((int)((double)(x * RadarWidth) / Setup->width + 0.5),
+							(int)((double)(y * RadarHeight) / Setup->height + 0.5), size);
 }
 
 int Handle_message(char *msg)
@@ -650,20 +666,24 @@ int Handle_message(char *msg)
 	char ignoree[MSG_LEN]; /* kps - was only MAX_CHARS previously. */
 	other_t *other;
 
-	if (msg[strlen(msg) - 1] == ']') {
-		for (i = strlen(msg) - 1; i > 0; i--) {
+	if (msg[strlen(msg) - 1] == ']')
+	{
+		for (i = strlen(msg) - 1; i > 0; i--)
+		{
 			if (msg[i - 1] == ' ' && msg[i] == '[')
 				break;
 		}
 
-		if (i == 0) {	/* Odd, but let it pass */
+		if (i == 0)
+		{ /* Odd, but let it pass */
 			Add_message("%s", msg);
 			return 0;
 		}
 
 		strcpy(ignoree, &msg[i + 1]);
 
-		for (i = 0; i < (int) strlen(ignoree); i++) {
+		for (i = 0; i < (int)strlen(ignoree); i++)
+		{
 			if (ignoree[i] == ']')
 				break;
 		}
@@ -671,12 +691,14 @@ int Handle_message(char *msg)
 
 		other = Other_by_name(ignoree, false);
 
-		if (other == NULL) {	/* Not in list, probably servermessage */
+		if (other == NULL)
+		{ /* Not in list, probably servermessage */
 			Add_message("%s", msg);
 			return 0;
 		}
 
-		if (other->ignorelevel <= 0) {
+		if (other->ignorelevel <= 0)
+		{
 			Add_message("%s", msg);
 			return 0;
 		}
@@ -755,75 +777,93 @@ int Handle_vdecor(int x, int y, int xi, int yi, int type)
 
 void frameCleanup(void)
 {
-	if (max_refuel > 0 && refuel_ptr) {
+	if (max_refuel > 0 && refuel_ptr)
+	{
 		max_refuel = 0;
 		XFREE(refuel_ptr);
 	}
-	if (max_connector > 0 && connector_ptr) {
+	if (max_connector > 0 && connector_ptr)
+	{
 		max_connector = 0;
 		XFREE(connector_ptr);
 	}
-	if (max_laser > 0 && laser_ptr) {
+	if (max_laser > 0 && laser_ptr)
+	{
 		max_laser = 0;
 		XFREE(laser_ptr);
 	}
-	if (max_missile > 0 && missile_ptr) {
+	if (max_missile > 0 && missile_ptr)
+	{
 		max_missile = 0;
 		XFREE(missile_ptr);
 	}
-	if (max_ball > 0 && ball_ptr) {
+	if (max_ball > 0 && ball_ptr)
+	{
 		max_ball = 0;
 		XFREE(ball_ptr);
 	}
-	if (max_ship > 0 && ship_ptr) {
+	if (max_ship > 0 && ship_ptr)
+	{
 		max_ship = 0;
 		XFREE(ship_ptr);
 	}
-	if (max_mine > 0 && mine_ptr) {
+	if (max_mine > 0 && mine_ptr)
+	{
 		max_mine = 0;
 		XFREE(mine_ptr);
 	}
-	if (max_ecm > 0 && ecm_ptr) {
+	if (max_ecm > 0 && ecm_ptr)
+	{
 		max_ecm = 0;
 		XFREE(ecm_ptr);
 	}
-	if (max_trans > 0 && trans_ptr) {
+	if (max_trans > 0 && trans_ptr)
+	{
 		max_trans = 0;
 		XFREE(trans_ptr);
 	}
-	if (max_radar > 0 && radar_ptr) {
+	if (max_radar > 0 && radar_ptr)
+	{
 		max_radar = 0;
 		XFREE(radar_ptr);
 	}
-	if (max_vcannon > 0 && vcannon_ptr) {
+	if (max_vcannon > 0 && vcannon_ptr)
+	{
 		max_vcannon = 0;
 		XFREE(vcannon_ptr);
 	}
-	if (max_vfuel > 0 && vfuel_ptr) {
+	if (max_vfuel > 0 && vfuel_ptr)
+	{
 		max_vfuel = 0;
 		XFREE(vfuel_ptr);
 	}
-	if (max_vbase > 0 && vbase_ptr) {
+	if (max_vbase > 0 && vbase_ptr)
+	{
 		max_vbase = 0;
 		XFREE(vbase_ptr);
 	}
-	if (max_vdecor > 0 && vdecor_ptr) {
+	if (max_vdecor > 0 && vdecor_ptr)
+	{
 		max_vdecor = 0;
 		XFREE(vdecor_ptr);
 	}
-	if (max_itemtype > 0 && itemtype_ptr) {
+	if (max_itemtype > 0 && itemtype_ptr)
+	{
 		max_itemtype = 0;
 		XFREE(itemtype_ptr);
 	}
-	if (max_wreckage > 0 && wreckage_ptr) {
+	if (max_wreckage > 0 && wreckage_ptr)
+	{
 		max_wreckage = 0;
 		XFREE(wreckage_ptr);
 	}
-	if (max_asteroids > 0 && asteroid_ptr) {
+	if (max_asteroids > 0 && asteroid_ptr)
+	{
 		max_asteroids = 0;
 		XFREE(asteroid_ptr);
 	}
-	if (max_wormholes > 0 && wormhole_ptr) {
+	if (max_wormholes > 0 && wormhole_ptr)
+	{
 		max_wormholes = 0;
 		XFREE(wormhole_ptr);
 	}

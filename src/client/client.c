@@ -3,7 +3,7 @@
  *
  * Copyright (C) 1991-2001 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -27,6 +27,7 @@
 
 #include "sysdeps.h"
 
+#include "client.h"
 #include "bit.h"
 #include "rules.h"
 #include "error.h"
@@ -45,7 +46,8 @@ static fuelstation_t *Fuelstation_by_pos(int x, int y)
 	lo = 0;
 	hi = num_fuels - 1;
 	pos = x * Setup->y + y;
-	while (lo < hi) {
+	while (lo < hi)
+	{
 		i = (lo + hi) >> 1;
 		if (pos > fuels[i].pos)
 			lo = i + 1;
@@ -85,14 +87,16 @@ int Target_alive(int x, int y, int *damage)
 	lo = 0;
 	hi = num_targets - 1;
 	pos = x * Setup->y + y;
-	while (lo < hi) {
+	while (lo < hi)
+	{
 		i = (lo + hi) >> 1;
 		if (pos > targets[i].pos)
 			lo = i + 1;
 		else
 			hi = i;
 	}
-	if (lo == hi && pos == targets[lo].pos) {
+	if (lo == hi && pos == targets[lo].pos)
+	{
 		*damage = targets[lo].damage;
 		return targets[lo].dead_time;
 	}
@@ -102,7 +106,8 @@ int Target_alive(int x, int y, int *damage)
 
 int Handle_fuel(int ind, int fuel)
 {
-	if (ind < 0 || ind >= num_fuels) {
+	if (ind < 0 || ind >= num_fuels)
+	{
 		warn("Bad fuelstation index (%d)", ind);
 		return -1;
 	}
@@ -117,7 +122,8 @@ static cannontime_t *Cannon_by_pos(int x, int y)
 	lo = 0;
 	hi = num_cannons - 1;
 	pos = x * Setup->y + y;
-	while (lo < hi) {
+	while (lo < hi)
+	{
 		i = (lo + hi) >> 1;
 		if (pos > cannons[i].pos)
 			lo = i + 1;
@@ -142,7 +148,8 @@ int Cannon_dead_time_by_pos(int x, int y, int *dot)
 
 int Handle_cannon(int ind, int dead_time)
 {
-	if (ind < 0 || ind >= num_cannons) {
+	if (ind < 0 || ind >= num_cannons)
+	{
 		warn("Bad cannon index (%d)", ind);
 		return 0;
 	}
@@ -152,18 +159,21 @@ int Handle_cannon(int ind, int dead_time)
 
 int Handle_target(int num, int dead_time, int damage)
 {
-	if (num < 0 || num >= num_targets) {
+	if (num < 0 || num >= num_targets)
+	{
 		warn("Bad target index (%d)", num);
 		return 0;
 	}
 	if (dead_time == 0 && (damage <= 0 || damage > TARGET_DAMAGE))
 		warn("BUG target %d, dead %d, damage %f", num, dead_time, damage);
 
-	if (targets[num].dead_time > 0 && dead_time == 0) {
+	if (targets[num].dead_time > 0 && dead_time == 0)
+	{
 		int pos = targets[num].pos;
 		Radar_show_target(pos / Setup->y, pos % Setup->y);
 	}
-	else if (targets[num].dead_time == 0 && dead_time > 0) {
+	else if (targets[num].dead_time == 0 && dead_time > 0)
+	{
 		int pos = targets[num].pos;
 		Radar_hide_target(pos / Setup->y, pos % Setup->y);
 	}
@@ -181,7 +191,8 @@ homebase_t *Homebase_by_pos(int x, int y)
 	lo = 0;
 	hi = num_bases - 1;
 	pos = x * Setup->y + y;
-	while (lo < hi) {
+	while (lo < hi)
+	{
 		i = (lo + hi) >> 1;
 		if (pos > bases[i].pos)
 			lo = i + 1;
@@ -209,11 +220,13 @@ int Handle_base(int id, int ind)
 {
 	int i;
 
-	if (ind < 0 || ind >= num_bases) {
+	if (ind < 0 || ind >= num_bases)
+	{
 		warn("Bad homebase index (%d)", ind);
 		return -1;
 	}
-	for (i = 0; i < num_bases; i++) {
+	for (i = 0; i < num_bases; i++)
+	{
 		if (bases[i].id == id)
 			bases[i].id = -1;
 	}
@@ -224,7 +237,8 @@ int Handle_base(int id, int ind)
 
 int Check_pos_by_index(int ind, int *xp, int *yp)
 {
-	if (ind < 0 || ind >= num_checks) {
+	if (ind < 0 || ind >= num_checks)
+	{
 		warn("Bad checkpoint index (%d)", ind);
 		*xp = 0;
 		*yp = 0;
@@ -240,7 +254,8 @@ int Check_index_by_pos(int x, int y)
 	int i, pos;
 
 	pos = x * Setup->y + y;
-	for (i = 0; i < num_checks; i++) {
+	for (i = 0; i < num_checks; i++)
+	{
 		if (pos == checks[i].pos)
 			return i;
 	}
@@ -255,32 +270,37 @@ static int Map_init(void)
 
 static int Map_cleanup(void)
 {
-	if (num_bases > 0) {
+	if (num_bases > 0)
+	{
 		XFREE(bases);
 		num_bases = 0;
 	}
-	if (num_fuels > 0) {
+	if (num_fuels > 0)
+	{
 		XFREE(fuels);
 		num_fuels = 0;
 	}
-	if (num_targets > 0) {
+	if (num_targets > 0)
+	{
 		XFREE(targets);
 		num_targets = 0;
 	}
-	if (num_cannons > 0) {
+	if (num_cannons > 0)
+	{
 		XFREE(cannons);
 		num_cannons = 0;
 	}
 	return 0;
 }
 
-
 homebase_t *Homebase_by_id(int id)
 {
 	int i;
 
-	if (id != -1) {
-		for (i = 0; i < num_bases; i++) {
+	if (id != -1)
+	{
+		for (i = 0; i < num_bases; i++)
+		{
 			if (bases[i].id == id)
 				return &bases[i];
 		}
@@ -293,8 +313,10 @@ int Handle_leave(int id)
 	other_t *other;
 	int i;
 
-	if ((other = Other_by_id(id)) != NULL) {
-		if (other == self) {
+	if ((other = Other_by_id(id)) != NULL)
+	{
+		if (other == self)
+		{
 			warn("Self left?!");
 			self = NULL;
 		}
@@ -303,19 +325,23 @@ int Handle_leave(int id)
 		/*
 		 * Silent about tanks and robots.
 		 */
-		if (other->mychar != 'T' && other->mychar != 'R') {
+		if (other->mychar != 'T' && other->mychar != 'R')
+		{
 			Add_message("%s left this world.", other->nick_name);
 		}
 		num_others--;
-		while (other < &Others[num_others]) {
+		while (other < &Others[num_others])
+		{
 			*other = other[1];
 			other++;
 		}
 		scoresChanged = 1;
 	}
-	for (i = 0; i < num_others; i++) {
+	for (i = 0; i < num_others; i++)
+	{
 		other = &Others[i];
-		if (other->war_id == id) {
+		if (other->war_id == id)
+		{
 			other->war_id = -1;
 			scoresChanged = 1;
 		}
@@ -324,17 +350,19 @@ int Handle_leave(int id)
 }
 
 int Handle_player(int id, int player_team, int mychar,
-		  char *nick_name, char *user_name, char *host_name, char *shape, int myself)
+				  char *nick_name, char *user_name, char *host_name, char *shape, int myself)
 {
 	other_t *other;
 
-	if (BIT(Setup->mode, TEAM_PLAY)
-	    && (player_team < 0 || player_team >= MAX_TEAMS)) {
+	if (BIT(Setup->mode, TEAM_PLAY) && (player_team < 0 || player_team >= MAX_TEAMS))
+	{
 		warn("Illegal team %d for received player, setting to 0", player_team);
 		player_team = 0;
 	}
-	if ((other = Other_by_id(id)) == NULL) {
-		if (num_others >= max_others) {
+	if ((other = Other_by_id(id)) == NULL)
+	{
+		if (num_others >= max_others)
+		{
 			max_others += 5;
 			if (num_others == 0)
 				Others = XMALLOC(other_t, max_others);
@@ -351,8 +379,10 @@ int Handle_player(int id, int player_team, int mychar,
 	/*
 	 * Servers send self as the first player.
 	 */
-	if (self == NULL) {
-		if (other != &Others[0]) {
+	if (self == NULL)
+	{
+		if (other != &Others[0])
+		{
 			/* Make 'self' the first member of Others[]. */
 			*other = Others[0];
 			other = &Others[0];
@@ -380,11 +410,13 @@ int Handle_team(int id, int pl_team)
 	other_t *other;
 
 	other = Other_by_id(id);
-	if (other == NULL) {
+	if (other == NULL)
+	{
 		warn("Received packet to change team for nonexistent id %d", id);
 		return 0;
 	}
-	if (BIT(Setup->mode, TEAM_PLAY) && (pl_team < 0 || pl_team >= MAX_TEAMS)) {
+	if (BIT(Setup->mode, TEAM_PLAY) && (pl_team < 0 || pl_team >= MAX_TEAMS))
+	{
 		warn("Illegal team %d received for player id %d", pl_team, id);
 		return 0;
 	}
@@ -398,18 +430,21 @@ int Handle_war(int robot_id, int killer_id)
 {
 	other_t *robot, *killer;
 
-	if ((robot = Other_by_id(robot_id)) == NULL) {
+	if ((robot = Other_by_id(robot_id)) == NULL)
+	{
 		warn("Can't update war for non-existing player (%d,%d)", robot_id, killer_id);
 		return 0;
 	}
-	if (killer_id == -1) {
+	if (killer_id == -1)
+	{
 		/*
 		 * Robot is no longer in war mode.
 		 */
 		robot->war_id = -1;
 		return 0;
 	}
-	if ((killer = Other_by_id(killer_id)) == NULL) {
+	if ((killer = Other_by_id(killer_id)) == NULL)
+	{
 		warn("Can't update war against non-existing player (%d,%d)", robot_id, killer_id);
 		return 0;
 	}
@@ -424,15 +459,14 @@ int Handle_seek(int programmer_id, int robot_id, int sought_id)
 {
 	other_t *programmer, *robot, *sought;
 
-	if ((programmer = Other_by_id(programmer_id)) == NULL
-	    || (robot = Other_by_id(robot_id)) == NULL
-	    || (sought = Other_by_id(sought_id)) == NULL) {
+	if ((programmer = Other_by_id(programmer_id)) == NULL || (robot = Other_by_id(robot_id)) == NULL || (sought = Other_by_id(sought_id)) == NULL)
+	{
 		warn("Bad player seek (%d,%d,%d)", programmer_id, robot_id, sought_id);
 		return 0;
 	}
 	robot->war_id = sought_id;
 	Add_message("%s has programmed %s to seek %s.", programmer->nick_name, robot->nick_name,
-		    sought->nick_name);
+				sought->nick_name);
 	scoresChanged = 1;
 
 	return 0;
@@ -442,12 +476,13 @@ int Handle_score(int id, int score, int life, int mychar, int alliance)
 {
 	other_t *other;
 
-	if ((other = Other_by_id(id)) == NULL) {
+	if ((other = Other_by_id(id)) == NULL)
+	{
 		warn("Can't update score for non-existing player %d,%.2f,%d", id, score, life);
 		return 0;
 	}
-	else if (other->score != score || other->life != life || other->mychar != mychar
-		 || other->alliance != alliance) {
+	else if (other->score != score || other->life != life || other->mychar != mychar || other->alliance != alliance)
+	{
 		other->score = score;
 		other->life = life;
 		other->mychar = mychar;
@@ -460,7 +495,8 @@ int Handle_score(int id, int score, int life, int mychar, int alliance)
 
 int Handle_team_score(int team, int score)
 {
-	if (teamscores[team] != score) {
+	if (teamscores[team] != score)
+	{
 		teamscores[team] = score;
 		scoresChanged = 1;
 	}
@@ -472,11 +508,13 @@ int Handle_timing(int id, int check, int round, long tloops)
 {
 	other_t *other;
 
-	if ((other = Other_by_id(id)) == NULL) {
+	if ((other = Other_by_id(id)) == NULL)
+	{
 		warn("Can't update timing for non-existing player %d,%d,%d", id, check, round);
 		return 0;
 	}
-	else if (other->check != check || other->round != round) {
+	else if (other->check != check || other->round != round)
+	{
 		other->check = check;
 		other->round = round;
 		other->timing = round * num_checks + check;
@@ -497,7 +535,8 @@ int Handle_score_object(int score, int x, int y, char *msg)
 	sobj->life_time = scoreObjectTime;
 
 	/* Initialize sobj->hud_msg (is shown on the HUD) */
-	if (msg[0] != '\0') {
+	if (msg[0] != '\0')
+	{
 		sprintf(sobj->hud_msg, "%s %d", msg, score);
 		sobj->hud_msg_len = strlen(sobj->hud_msg);
 		sobj->hud_msg_width = -1;
@@ -550,7 +589,8 @@ int Client_setup(void)
 	if (Map_init() == -1)
 		return -1;
 
-	if (oldServer) {
+	if (oldServer)
+	{
 		if (Map_edges() == -1)
 			return -1;
 		Map_dots();
@@ -598,18 +638,14 @@ int Client_power(void)
 {
 	int i;
 
-	if (Send_power(power) == -1
-	    || Send_power_s(power_s) == -1
-	    || Send_turnspeed(turnspeed) == -1
-	    || Send_turnspeed_s(turnspeed_s) == -1
-	    || Send_turnresistance(turnresistance) == -1
-	    || Send_turnresistance_s(turnresistance_s) == -1)
+	if (Send_power(power) == -1 || Send_power_s(power_s) == -1 || Send_turnspeed(turnspeed) == -1 || Send_turnspeed_s(turnspeed_s) == -1 || Send_turnresistance(turnresistance) == -1 || Send_turnresistance_s(turnresistance_s) == -1)
 		return -1;
 
 	if (Check_view_dimensions() == -1)
 		return -1;
 
-	for (i = 0; i < NUM_MODBANKS; i++) {
+	for (i = 0; i < NUM_MODBANKS; i++)
+	{
 		if (Send_modifier_bank(i) == -1)
 			return -1;
 	}
@@ -632,8 +668,10 @@ void Client_cleanup(void)
 	Platform_specific_cleanup();
 	Free_selectionAndHistory();
 	Free_msgs();
-	if (max_others > 0) {
-		for (i = 0; i < num_others; i++) {
+	if (max_others > 0)
+	{
+		for (i = 0; i < num_others; i++)
+		{
 			other_t *other = &Others[i];
 			Free_ship_shape(other->ship);
 		}
@@ -641,75 +679,93 @@ void Client_cleanup(void)
 		num_others = 0;
 		max_others = 0;
 	}
-	if (max_refuel > 0 && refuel_ptr) {
+	if (max_refuel > 0 && refuel_ptr)
+	{
 		max_refuel = 0;
 		XFREE(refuel_ptr);
 	}
-	if (max_connector > 0 && connector_ptr) {
+	if (max_connector > 0 && connector_ptr)
+	{
 		max_connector = 0;
 		XFREE(connector_ptr);
 	}
-	if (max_laser > 0 && laser_ptr) {
+	if (max_laser > 0 && laser_ptr)
+	{
 		max_laser = 0;
 		XFREE(laser_ptr);
 	}
-	if (max_missile > 0 && missile_ptr) {
+	if (max_missile > 0 && missile_ptr)
+	{
 		max_missile = 0;
 		XFREE(missile_ptr);
 	}
-	if (max_ball > 0 && ball_ptr) {
+	if (max_ball > 0 && ball_ptr)
+	{
 		max_ball = 0;
 		XFREE(ball_ptr);
 	}
-	if (max_ship > 0 && ship_ptr) {
+	if (max_ship > 0 && ship_ptr)
+	{
 		max_ship = 0;
 		XFREE(ship_ptr);
 	}
-	if (max_mine > 0 && mine_ptr) {
+	if (max_mine > 0 && mine_ptr)
+	{
 		max_mine = 0;
 		XFREE(mine_ptr);
 	}
-	if (max_ecm > 0 && ecm_ptr) {
+	if (max_ecm > 0 && ecm_ptr)
+	{
 		max_ecm = 0;
 		XFREE(ecm_ptr);
 	}
-	if (max_trans > 0 && trans_ptr) {
+	if (max_trans > 0 && trans_ptr)
+	{
 		max_trans = 0;
 		XFREE(trans_ptr);
 	}
-	if (max_radar > 0 && radar_ptr) {
+	if (max_radar > 0 && radar_ptr)
+	{
 		max_radar = 0;
 		XFREE(radar_ptr);
 	}
-	if (max_vcannon > 0 && vcannon_ptr) {
+	if (max_vcannon > 0 && vcannon_ptr)
+	{
 		max_vcannon = 0;
 		XFREE(vcannon_ptr);
 	}
-	if (max_vfuel > 0 && vfuel_ptr) {
+	if (max_vfuel > 0 && vfuel_ptr)
+	{
 		max_vfuel = 0;
 		XFREE(vfuel_ptr);
 	}
-	if (max_vbase > 0 && vbase_ptr) {
+	if (max_vbase > 0 && vbase_ptr)
+	{
 		max_vbase = 0;
 		XFREE(vbase_ptr);
 	}
-	if (max_vdecor > 0 && vdecor_ptr) {
+	if (max_vdecor > 0 && vdecor_ptr)
+	{
 		max_vdecor = 0;
 		XFREE(vdecor_ptr);
 	}
-	if (max_itemtype > 0 && itemtype_ptr) {
+	if (max_itemtype > 0 && itemtype_ptr)
+	{
 		max_itemtype = 0;
 		XFREE(itemtype_ptr);
 	}
-	if (max_wreckage > 0 && wreckage_ptr) {
+	if (max_wreckage > 0 && wreckage_ptr)
+	{
 		max_wreckage = 0;
 		XFREE(wreckage_ptr);
 	}
-	if (max_asteroids > 0 && asteroid_ptr) {
+	if (max_asteroids > 0 && asteroid_ptr)
+	{
 		max_asteroids = 0;
 		XFREE(asteroid_ptr);
 	}
-	if (max_wormholes > 0 && wormhole_ptr) {
+	if (max_wormholes > 0 && wormhole_ptr)
+	{
 		max_wormholes = 0;
 		XFREE(wormhole_ptr);
 	}
@@ -739,7 +795,7 @@ int Client_check_pointer_move_interval(void)
 {
 	struct timeval now;
 	static int last_send_interval_num = -1;
-	int interval_num;	/* 0 ... maxMouseTurnsPS - 1 */
+	int interval_num; /* 0 ... maxMouseTurnsPS - 1 */
 	int next_interval_start;
 
 	assert(maxMouseTurnsPS > 0);
@@ -749,17 +805,19 @@ int Client_check_pointer_move_interval(void)
 	 * if not and there is something to send, do that now.
 	 */
 	gettimeofday(&now, NULL);
-	interval_num = ((int) now.tv_usec) / mouseMovementInterval;
-	if (interval_num != last_send_interval_num && cumulativeMouseMovement != 0) {
+	interval_num = ((int)now.tv_usec) / mouseMovementInterval;
+	if (interval_num != last_send_interval_num && cumulativeMouseMovement != 0)
+	{
 		Send_pointer_move(cumulativeMouseMovement);
 		cumulativeMouseMovement = 0;
 		last_send_interval_num = interval_num;
 	}
 
-	if (cumulativeMouseMovement != 0) {
+	if (cumulativeMouseMovement != 0)
+	{
 		/* calculate how long to wait to next interval */
 		next_interval_start = (interval_num + 1) * mouseMovementInterval;
-		return next_interval_start - (int) now.tv_usec;
+		return next_interval_start - (int)now.tv_usec;
 	}
 
 	return 1000000;

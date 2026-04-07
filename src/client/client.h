@@ -1,9 +1,9 @@
-/* 
+/*
  * BloodsPilot, a multiplayer space war game.
  *
  * Copyright (C) 1991-2001 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -27,7 +27,7 @@
 #define CLIENT_H
 
 #ifdef _WINDOWS
-#ifndef	_WINSOCKAPI_
+#ifndef _WINSOCKAPI_
 #include <winsock.h>
 #endif
 #endif
@@ -70,18 +70,19 @@ static inline int WINSCALE(int x)
 {
 	bool negative = false;
 	int y, t = x;
-	float f = (float) 0.0;
+	float f = (float)0.0;
 
 	if (x == 0)
 		return 0;
 
-	if (t < 0) {
+	if (t < 0)
+	{
 		negative = true;
 		t = -t;
 	}
 
 	f = WINSCALE_f(t);
-	y = (int) (f + (float) 0.5);
+	y = (int)(f + (float)0.5);
 
 	if (y < 1)
 		y = 1;
@@ -92,13 +93,15 @@ static inline int WINSCALE(int x)
 	return y;
 }
 
-#define	UWINSCALE(x)	((unsigned)WINSCALE(x))
+#define UWINSCALE(x) ((unsigned)WINSCALE(x))
 
-#define SCALEX(co) ((int) (WINSCALE(co) - WINSCALE(world.x)))
-#define SCALEY(co) ((int) (WINSCALE(world.y + ext_view_height) - WINSCALE(co)))
-#define X(co)	((int) ((co) - world.x))
-#define Y(co)	((int) (world.y + ext_view_height - (co)))
+#define SCALEX(co) ((int)(WINSCALE(co) - WINSCALE(world.x)))
+#define SCALEY(co) ((int)(WINSCALE(world.y + ext_view_height) - WINSCALE(co)))
+#define X(co) ((int)((co) - world.x))
+#define Y(co) ((int)(world.y + ext_view_height - (co)))
 
-
+int init_blockmap(void);
+int init_polymap(void);
+int Map_edges(void);
 
 #endif

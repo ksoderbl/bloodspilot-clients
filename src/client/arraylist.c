@@ -1,7 +1,7 @@
-/* 
+/*
  * BloodsPilot, a multiplayer space war game.
  *
- * Copyright (C) 2005 Kristian Söderblom <kps@users.sourceforge.net>
+ * Copyright (C) 2005 Kristian Sï¿½derblom <kps@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* $Id: arraylist.c,v 1.2 2007/09/27 22:19:45 kps Exp $ */
-
 #include "sysdeps.h"
 #include "arraylist.h"
 #include "const.h"
@@ -27,24 +25,25 @@
 #define ARRAYLIST_INITIAL_NUM_ELEMENTS 16
 #define ARRAYLIST_ELEMENT_ALIGNMENT sizeof(double)
 
-void Arraylist_clear(arraylist_t * alp)
+void Arraylist_clear(arraylist_t *alp)
 {
 	alp->num_elements = 0;
 }
 
-void *Arraylist_get(arraylist_t * alp, int ind)
+void *Arraylist_get(arraylist_t *alp, int ind)
 {
 	if (ind < 0 || ind >= alp->num_elements)
 		return NULL;
 	return Arraylist_get_element_pointer(alp, ind);
 }
 
-int Arraylist_add(arraylist_t * alp, void *element)
+int Arraylist_add(arraylist_t *alp, void *element)
 {
 	size_t n;
 	void *p;
 
-	if (alp->num_elements < alp->max_elements) {
+	if (alp->num_elements < alp->max_elements)
+	{
 		p = Arraylist_get_element_pointer(alp, alp->num_elements);
 		memcpy(p, element, alp->element_size);
 		return alp->num_elements++;
@@ -64,7 +63,7 @@ int Arraylist_add(arraylist_t * alp, void *element)
 	return Arraylist_add(alp, element);
 }
 
-void Arraylist_fast_remove(arraylist_t * alp, int ind)
+void Arraylist_fast_remove(arraylist_t *alp, int ind)
 {
 	void *p, *last_p;
 
@@ -75,7 +74,8 @@ void Arraylist_fast_remove(arraylist_t * alp, int ind)
 		return;
 
 	/* last element? */
-	if (ind == alp->num_elements - 1) {
+	if (ind == alp->num_elements - 1)
+	{
 		/* no need to copy anything */
 		alp->num_elements--;
 		return;
@@ -93,8 +93,8 @@ arraylist_t *Arraylist_alloc(size_t element_size)
 	arraylist_t *alp = XCALLOC(arraylist_t, 1);
 	size_t padded_size = element_size;
 
-	if (((element_size % ARRAYLIST_ELEMENT_ALIGNMENT) != 0)
-	    && element_size != 1 && element_size != 2 && element_size != 4) {
+	if (((element_size % ARRAYLIST_ELEMENT_ALIGNMENT) != 0) && element_size != 1 && element_size != 2 && element_size != 4)
+	{
 		padded_size /= ARRAYLIST_ELEMENT_ALIGNMENT;
 		padded_size *= ARRAYLIST_ELEMENT_ALIGNMENT;
 		padded_size += ARRAYLIST_ELEMENT_ALIGNMENT;
@@ -117,11 +117,11 @@ arraylist_t *Arraylist_alloc(size_t element_size)
 
 	return alp;
 
-      failed:
+failed:
 	return NULL;
 }
 
-void Arraylist_free(arraylist_t * alp)
+void Arraylist_free(arraylist_t *alp)
 {
 	assert(alp != NULL);
 	assert(alp->elements != NULL);

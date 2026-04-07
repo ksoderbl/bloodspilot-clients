@@ -244,6 +244,7 @@ LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MATHLIB = @MATHLIB@
 MKDIR_P = @MKDIR_P@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -260,6 +261,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SOUND_LIBS = @SOUND_LIBS@
 STRIP = @STRIP@
+SYS_GL_LIBS = @SYS_GL_LIBS@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
 XP_AUTHORS = @XP_AUTHORS@
@@ -329,8 +331,24 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src share doc
-EXTRA_DIST = bloodspilot.png bloodspilot.svg build-454.sh build-x11.sh ChangeLog.454 INSTALL.ubuntu
+EXTRA_DIST = \
+	AUTHORS \
+	COPYING \
+	ChangeLog \
+	ChangeLog.454 \
+	INSTALL \
+	INSTALL.ubuntu \
+	NEWS \
+	README \
+	TODO \
+	autogen.sh \
+	bloodspilot.png \
+	bloodspilot.svg \
+	build-454.sh \
+	build-x11.sh
+
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -341,15 +359,15 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      echo ' cd $(srcdir) && $(AUTOMAKE) --gnu'; \
-	      $(am__cd) $(srcdir) && $(AUTOMAKE) --gnu \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
+	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu Makefile
+	  $(AUTOMAKE) --foreign Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

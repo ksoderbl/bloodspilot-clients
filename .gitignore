@@ -37,6 +37,7 @@
 *.hex
 src/client/454/bloodspilot-client-454*
 src/client/x11/bloodspilot-client-x11*
+src/replay/bloodspilot-replay
 
 # Debug files
 *.dSYM/

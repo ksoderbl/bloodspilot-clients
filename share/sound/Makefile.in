@@ -185,6 +185,7 @@ LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MATHLIB = @MATHLIB@
 MKDIR_P = @MKDIR_P@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -201,6 +202,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SOUND_LIBS = @SOUND_LIBS@
 STRIP = @STRIP@
+SYS_GL_LIBS = @SYS_GL_LIBS@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
 XP_AUTHORS = @XP_AUTHORS@
@@ -315,9 +317,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu share/sound/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign share/sound/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu share/sound/Makefile
+	  $(AUTOMAKE) --foreign share/sound/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

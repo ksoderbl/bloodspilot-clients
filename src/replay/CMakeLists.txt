@@ -14,11 +14,13 @@ target_compile_definitions(bloodspilot-replay
     PRIVATE
         REPLAY=1
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
+        VERSION="${PROJECT_VERSION}"
 )
 
 target_link_libraries(bloodspilot-replay
     PRIVATE
         X11::X11
+        m
 )
 
 install(TARGETS bloodspilot-replay

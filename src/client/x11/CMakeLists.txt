@@ -14,12 +14,14 @@ target_compile_definitions(bloodspilot-client-x11
     PRIVATE
         X11_CLIENT=1
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
+        VERSION="${PROJECT_VERSION}"
 )
 
 target_link_libraries(bloodspilot-client-x11
     PRIVATE
         bloodspilot_client_common
         X11::X11
+        m
 )
 
 if(TARGET X11::Xext)

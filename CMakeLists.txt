@@ -29,6 +29,7 @@ set(BLOODSPILOT_CONF_DATADIR "${BLOODSPILOT_PKGDATADIR}/")
 
 check_function_exists(strlcpy HAVE_STRLCPY)
 check_function_exists(strlcat HAVE_STRLCAT)
+check_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in

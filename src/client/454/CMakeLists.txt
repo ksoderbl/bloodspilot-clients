@@ -22,11 +22,13 @@ target_compile_definitions(bloodspilot-client-454
     PRIVATE
         XP454_CLIENT=1
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
+        VERSION="${PROJECT_VERSION}"
 )
 
 target_link_libraries(bloodspilot-client-454
     PRIVATE
         X11::X11
+        m
 )
 
 if(TARGET X11::Xext)

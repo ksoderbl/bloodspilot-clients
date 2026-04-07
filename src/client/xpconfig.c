@@ -1,9 +1,9 @@
-/* 
+/*
  * BloodsPilot, a multiplayer space war game.
  *
  * Copyright (C) 1991-2001 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -108,7 +108,7 @@ void Conf_print(void)
 {
 	warn("======================================================================");
 	warn("VERSION            = %s", VERSION);
-	warn("PACKAGE            = %s", PACKAGE);
+	// warn("PACKAGE            = %s", PACKAGE);
 	warn("PACKAGE_BUGREPORT  = %s", PACKAGE_BUGREPORT);
 
 #ifdef DBE

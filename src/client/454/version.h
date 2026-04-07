@@ -1,7 +1,7 @@
-/* 
+/*
  * XPilot, a multiplayer gravity war game.  Copyright (C) 1991-2002 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -21,23 +21,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef	VERSION_H
-#define	VERSION_H
+#ifndef VERSION_H
+#define VERSION_H
 
-#if defined(__hpux)
-#   pragma COPYRIGHT_DATE	"1991-2002"
-#   pragma COPYRIGHT		"Bjørn Stabell, Ken Ronny Schouten, Bert Gijsbers & Dick Balaska"
-#   pragma VERSIONID		"XPilot 4.5.4"
-#endif
+// #define VERSION "4.5.4"
+#define TITLE "XPilot 4.5.4"
+#define AUTHORS "Bjï¿½rn Stabell, Ken Ronny Schouten, Bert Gijsbers & Dick Balaska"
+#define COPYRIGHT "Copyright ï¿½ 1991-2002 by Bjï¿½rn Stabell, Ken Ronny Schouten, Bert Gijsbers & Dick Balaska"
 
-#define VERSION			"4.5.4"
-#ifdef	_WINDOWS
-#define	TITLE			"4.5.4-NT13"
-#define	VERSION_WINDOWS	"13"
-#else
-#define TITLE			"XPilot 4.5.4"
-#endif
-#define AUTHORS			"Bjørn Stabell, Ken Ronny Schouten, Bert Gijsbers & Dick Balaska"
-#define COPYRIGHT		"Copyright © 1991-2002 by Bjørn Stabell, Ken Ronny Schouten, Bert Gijsbers & Dick Balaska"
-
-#endif				/* VERSION_H */
+#endif /* VERSION_H */

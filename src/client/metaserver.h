@@ -1,9 +1,9 @@
-/* 
+/*
  * BloodsPilot, a multiplayer space war game.  Copyright (C) 1991-2005 by
  *
  * Copyright (C) 1991-2005 by
  *
- *      Bjørn Stabell        <bjoern@xpilot.org>
+ *      Bjï¿½rn Stabell        <bjoern@xpilot.org>
  *      Ken Ronny Schouten   <ken@xpilot.org>
  *      Bert Gijsbers        <bert@xpilot.org>
  *      Dick Balaska         <dick@xpilot.org>
@@ -25,13 +25,13 @@
 
 /* $Id: metaserver.h,v 1.2 2007/09/06 11:08:25 kps Exp $ */
 
-#ifndef	METASERVER_H
-#define	METASERVER_H
+#ifndef METASERVER_H
+#define METASERVER_H
 
-#define META_PORT	5500	/* for server-metaserver communication */
-#define META_HOST	"meta.xpilot.org"
-#define META_HOST_TWO	"meta2.xpilot.org"
-#define META_IP		"129.242.13.151"
-#define META_IP_TWO	"72.18.206.126"
+#define META_PORT 5500 /* for server-metaserver communication */
+#define META_HOST "meta.xpilot.org"
+#define META_HOST_TWO "meta2.xpilot.org"
+#define META_IP "45.55.104.252"
+#define META_IP_TWO "194.28.50.74"
 
 #endif

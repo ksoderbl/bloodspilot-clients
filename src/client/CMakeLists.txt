@@ -21,8 +21,13 @@ target_include_directories(bloodspilot_client_common
 
 target_compile_definitions(bloodspilot_client_common
     PUBLIC
+        HAVE_CONFIG_H=1
         CONF_DATADIR="${BLOODSPILOT_CONF_DATADIR}"
 )
+
+if(ZLIB_FOUND)
+    target_link_libraries(bloodspilot_client_common PUBLIC ZLIB::ZLIB)
+endif()
 
 if(BLOODSPILOT_ENABLE_SOUND AND BLOODSPILOT_SOUND_LIBS)
     target_link_libraries(bloodspilot_client_common PUBLIC ${BLOODSPILOT_SOUND_LIBS})

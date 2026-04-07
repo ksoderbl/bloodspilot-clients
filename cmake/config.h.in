@@ -11,3 +11,4 @@
 #cmakedefine HAVE_STRLCPY 1
 #cmakedefine HAVE_STRLCAT 1
 #cmakedefine HAVE_GETTIMEOFDAY 1
+#cmakedefine HAVE_ZLIB_H 1

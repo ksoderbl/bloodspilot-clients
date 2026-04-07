@@ -41,6 +41,10 @@ find_package(X11 REQUIRED)
 find_package(ZLIB QUIET)
 find_package(OpenGL QUIET)
 
+if(ZLIB_FOUND)
+    set(HAVE_ZLIB_H 1)
+endif()
+
 set(BLOODSPILOT_SOUND_LIBS "")
 if(BLOODSPILOT_ENABLE_SOUND)
     find_library(OPENAL_LIBRARY openal)
